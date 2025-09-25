@@ -1,22 +1,30 @@
 # === imports ===
 import os
+import base64
+from typing import Optional
+
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import google.generativeai as genai
-from typing import Optional
 
 load_dotenv()  # local folosește backend/.env; pe Render citim din env vars
 
-app = FastAPI()
+# === FastAPI app + CORS ===
+app = FastAPI(title="ReSpace Design API", version="0.1.0")
 
-# CORS larg pentru MVP (îl restrângem după deploy)
+# CORS: permite frontendul local și (mai târziu) domeniul Vercel
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=[
+        "http://localhost:5173",                       # dev local
+        "https://respace-backend-nfiv.onrender.com",   # (safe to include)
+        # adaugă aici domeniul Vercel când îl ai:
+        # "https://respace-design.vercel.app",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=False,
 )
 
 API_KEY = os.getenv("GEMINI_API_KEY")
@@ -27,17 +35,6 @@ else:
 
 IMAGE_MODEL_ID = "gemini-2.5-flash-image-preview"
 
-
-# === FastAPI app + CORS ===
-app = FastAPI(title="ReSpace Design API", version="0.1.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],           # pentru dev; în prod restrânge la domeniul tău
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # --- Health check ---
 @app.get("/health")
