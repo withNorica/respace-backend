@@ -18,14 +18,14 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",                       # dev local
-        "https://respace-backend-nfiv.onrender.com",   # (safe to include)
-        # adaugă aici domeniul Vercel când îl ai:
-        # "https://respace-design.vercel.app",
+        "https://respace-backend-nfiv.onrender.com",   # backend direct
+        "respace-backend.vercel.app",           # frontend Vercel live
     ],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=False,
 )
+
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
