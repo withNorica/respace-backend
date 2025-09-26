@@ -26,7 +26,14 @@ export async function generateDesignViaBackend(
     throw new Error(`Backend error ${res.status}: ${text}`);
   }
 
-  return (await res.json()) as {
+  const json = await res.json();
+
+  // Normalizează ca UI-ul să aibă mereu image_url
+  if (!json.image_url && json.image_base64) {
+    json.image_url = "data:image/png;base64," + json.image_base64;
+  }
+
+  return json as {
     ok: boolean;
     received: {
       filename: string;
