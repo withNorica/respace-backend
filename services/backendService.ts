@@ -16,10 +16,13 @@ export async function generateDesignViaBackend(
   fd.append("style", style);
   if (specificChanges) fd.append("specific_changes", specificChanges);
 
-  const res = await fetch(`${API}/generate`, {
+  const res = await fetch(`${API_BASE}/generate`, {
     method: "POST",
     body: fd,
   });
+console.log("API_BASE =", API_BASE);
+// SHIM global – dacă alt cod așteaptă `API`, dăm fallback la API_BASE
+;(globalThis as any).API = API_BASE;
 
   if (!res.ok) {
     const text = await res.text();
