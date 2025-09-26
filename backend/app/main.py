@@ -1,4 +1,5 @@
 # === imports ===
+# === imports ===
 import os
 import base64
 from typing import Optional
@@ -8,24 +9,22 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-load_dotenv()  # local folosește backend/.env; pe Render citim din env vars
+load_dotenv()
 
-# === FastAPI app + CORS ===
 app = FastAPI(title="ReSpace Design API", version="0.1.0")
 
-# CORS: permite frontendul local și (mai târziu) domeniul Vercel
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",                       # dev local
-        "https://respace-backend-nfiv.onrender.com",   # backend direct
-        "respace-backend.vercel.app",           # frontend Vercel live
+        "http://localhost:5173",                      # dev local
+        "https://respace-backend.vercel.app",         # frontend Vercel (corect, cu https://)
+        # poți lăsa și backend-ul, nu strică:
+        "https://respace-backend-nfiv.onrender.com",
     ],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=False,
 )
-
 
 API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
@@ -34,6 +33,7 @@ else:
     genai.configure(api_key=API_KEY)
 
 IMAGE_MODEL_ID = "gemini-2.5-flash-image-preview"
+
 
 
 # --- Health check ---
