@@ -1,4 +1,10 @@
-const API = import.meta.env.VITE_API_BASE_URL;
+// baza de API: ia din Vite env; fallback pentru dev local
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE_URL ||
+  (import.meta as any).env?.VITE_API_BASE ||
+  "http://127.0.0.1:8000";
+console.log("API_BASE =", API_BASE);
+
 
 export async function generateDesignViaBackend(
   file: File,
