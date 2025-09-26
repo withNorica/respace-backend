@@ -248,7 +248,56 @@ const App: React.FC = () => {
                 )}
               </div>
               {resultImage && (
-                <button onClick={handleDownloadImage}
+                <button onClick={function dataURLtoBlob(dataUrl: string) {
+  const [meta, b64] = dataUrl.split(",");
+  const mimeMatch = /data:(.*?);base64/.exec(meta);
+  const mime = mimeMatch ? mimeMatch[1] : "image/png";
+  const bin = atob(b64);
+  const len = bin.length;
+  const u8 = new Uint8Array(len);
+  for (let i = 0; i < len; i++) u8[i] = bin.charCodeAt(i);
+  return new Blob([u8], { type: mime });
+}
+
+async function handleDownloadImage() {
+  if (!resultImage) return;
+
+  // dacă e base64
+  if (resultImage.startsWith("data:image/")) {
+    const blob = dataURLtoBlob(resultImage);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ai-redesign.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    return;
+  }
+
+  // dacă e URL normal
+  try {
+    const resp = await fetch(resultImage);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ai-redesign.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch {
+    const a = document.createElement("a");
+    a.href = resultImage;
+    a.download = "ai-redesign.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+}
+}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg">
                   Download Image
                 </button>
