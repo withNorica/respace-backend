@@ -52,36 +52,65 @@ const PresetModal: React.FC<PresetModalProps> = ({ isOpen, onClose, onSave }) =>
       return;
     }
     onSave({ name, palette, furniture, decor, mood });
-    setName(""); setPalette(""); setFurniture(""); setDecor(""); setMood("");
+    setName("");
+    setPalette("");
+    setFurniture("");
+    setDecor("");
+    setMood("");
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-w-lg p-6 animate-fade-in"
-           onClick={(e) => e.stopPropagation()}>
+      <div
+        className="bg-white dark:bg-zinc-800 rounded-lg shadow-xl w-full max-w-lg p-6 animate-fade-in"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="text-2xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">Create Custom Style Preset</h2>
         <div className="space-y-4">
-          <input className="w-full p-2 border rounded-md dark:bg-zinc-700 dark:text-zinc-200"
-                 placeholder="Preset Name (e.g., 'Cozy Cottage')"
-                 value={name} onChange={(e)=>setName(e.target.value)} />
-          <textarea className="w-full p-2 border rounded-md dark:bg/zinc-700 dark:text-zinc-200"
-                    placeholder="Color Palette (e.g., 'Earthy tones, cream, terracotta')"
-                    rows={2} value={palette} onChange={(e)=>setPalette(e.target.value)} />
-          <textarea className="w-full p-2 border rounded-md dark:bg/zinc-700 dark:text-zinc-200"
-                    placeholder="Furniture Types (e.g., 'Plush sofas, rustic wood, leather armchairs')"
-                    rows={2} value={furniture} onChange={(e)=>setFurniture(e.target.value)} />
-          <textarea className="w-full p-2 border rounded-md dark:bg/zinc-700 dark:text-zinc-200"
-                    placeholder="Decor Elements (e.g., 'Woven textiles, houseplants, vintage art')"
-                    rows={2} value={decor} onChange={(e)=>setDecor(e.target.value)} />
-          <textarea className="w-full p-2 border rounded-md dark:bg/zinc-700 dark:text-zinc-200"
-                    placeholder="Overall Mood (e.g., 'Warm, inviting, and peaceful')"
-                    rows={2} value={mood} onChange={(e)=>setMood(e.target.value)} />
+          <input
+            className="w-full p-2 border rounded-md dark:bg-zinc-700 dark:text-zinc-200"
+            placeholder="Preset Name (e.g., 'Cozy Cottage')"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <textarea
+            className="w-full p-2 border rounded-md dark:bg-zinc-700 dark:text-zinc-200"
+            placeholder="Color Palette (e.g., 'Earthy tones, cream, terracotta')"
+            rows={2}
+            value={palette}
+            onChange={(e) => setPalette(e.target.value)}
+          />
+          <textarea
+            className="w-full p-2 border rounded-md dark:bg-zinc-700 dark:text-zinc-200"
+            placeholder="Furniture Types (e.g., 'Plush sofas, rustic wood, leather armchairs')"
+            rows={2}
+            value={furniture}
+            onChange={(e) => setFurniture(e.target.value)}
+          />
+          <textarea
+            className="w-full p-2 border rounded-md dark:bg-zinc-700 dark:text-zinc-200"
+            placeholder="Decor Elements (e.g., 'Woven textiles, houseplants, vintage art')"
+            rows={2}
+            value={decor}
+            onChange={(e) => setDecor(e.target.value)}
+          />
+          <textarea
+            className="w-full p-2 border rounded-md dark:bg-zinc-700 dark:text-zinc-200"
+            placeholder="Overall Mood (e.g., 'Warm, inviting, and peaceful')"
+            rows={2}
+            value={mood}
+            onChange={(e) => setMood(e.target.value)}
+          />
         </div>
         <div className="mt-6 flex justify-end gap-3">
-          <button onClick={onClose} className="py-2 px-4 bg-zinc-200 dark:bg-zinc-600 rounded-md">Cancel</button>
-          <button onClick={handleSave} className="py-2 px-4 bg-blue-600 text-white rounded-md">Save Preset</button>
+          <button onClick={onClose} className="py-2 px-4 bg-zinc-200 dark:bg-zinc-600 rounded-md">
+            Cancel
+          </button>
+          <button onClick={handleSave} className="py-2 px-4 bg-blue-600 text-white rounded-md">
+            Save Preset
+          </button>
         </div>
       </div>
     </div>
@@ -97,10 +126,13 @@ const App: React.FC = () => {
   });
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark"); else root.classList.remove("dark");
-    try { localStorage.setItem("ai-interior-designer-theme", theme); } catch {}
+    if (theme === "dark") root.classList.add("dark");
+    else root.classList.remove("dark");
+    try {
+      localStorage.setItem("ai-interior-designer-theme", theme);
+    } catch {}
   }, [theme]);
-  const toggleTheme = () => setTheme(t => t === "light" ? "dark" : "light");
+  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
   // upload + preview
   const [roomImage, setRoomImage] = useState<File | null>(null);
@@ -121,17 +153,24 @@ const App: React.FC = () => {
   // presets
   const [presets, setPresets] = useState<Preset[]>([]);
   const [isPresetModalOpen, setIsPresetModalOpen] = useState(false);
-  useEffect(() => { try {
-    const saved = localStorage.getItem("ai-interior-designer-presets");
-    if (saved) setPresets(JSON.parse(saved));
-  } catch {} }, []);
-  useEffect(() => { try {
-    localStorage.setItem("ai-interior-designer-presets", JSON.stringify(presets));
-  } catch {} }, [presets]);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("ai-interior-designer-presets");
+      if (saved) setPresets(JSON.parse(saved));
+    } catch {}
+  }, []);
+  useEffect(() => {
+    try {
+      localStorage.setItem("ai-interior-designer-presets", JSON.stringify(presets));
+    } catch {}
+  }, [presets]);
 
   // preview file URL
   useEffect(() => {
-    if (!roomImage) { setPreviewUrl(null); return; }
+    if (!roomImage) {
+      setPreviewUrl(null);
+      return;
+    }
     const url = URL.createObjectURL(roomImage);
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
@@ -148,9 +187,14 @@ const App: React.FC = () => {
     `Redesign in ${style} style: cohesive palette, matching furniture, improved lighting, and balanced layout. Keep walls clean; add 2–3 decor accents.`;
 
   const handleGenerate = useCallback(async () => {
-    if (!roomImage) { setError("Please upload an image of your room first."); return; }
-    setIsLoading(true); setError(null);
-    setResultImage(null); setResultText(null);
+    if (!roomImage) {
+      setError("Please upload an image of your room first.");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    setResultImage(null);
+    setResultText(null);
 
     try {
       const fallback = DEFAULT_CHANGES(selectedStyle);
@@ -158,16 +202,13 @@ const App: React.FC = () => {
 
       const res = await generateDesignViaBackend(roomImage, selectedStyle, sc);
 
-      // imagine din backend (URL sau base64 normalizat)
       const imgFromBackend: string | null = res.image_url || null;
       setResultImage(imgFromBackend);
 
-      // text
       const txt = (res.design_suggestions || "").trim();
       setResultText(txt || "• Keep it simple, cohesive, and functional.");
-      // după generare, ascundem preview ca să fie clar rezultatul
-      if (imgFromBackend) setPreviewUrl(null);
 
+      if (imgFromBackend) setPreviewUrl(null);
     } catch (err: any) {
       console.error(err);
       setError(`Failed to generate design. ${err?.message ?? "Unknown error"}`);
@@ -177,26 +218,74 @@ const App: React.FC = () => {
   }, [roomImage, selectedStyle, specificChanges]);
 
   const handleReset = useCallback(() => {
-    setRoomImage(null); setPreviewUrl(null);
-    setSelectedStyle(DESIGN_STYLES[0]); setSpecificChanges("");
-    setIsLoading(false); setError(null);
-    setResultImage(null); setResultText(null);
+    setRoomImage(null);
+    setPreviewUrl(null);
+    setSelectedStyle(DESIGN_STYLES[0]);
+    setSpecificChanges("");
+    setIsLoading(false);
+    setError(null);
+    setResultImage(null);
+    setResultText(null);
   }, []);
 
-  const handleDownloadImage = () => {
+  // -------- DOWNLOAD HELPERS (corecte, în interiorul componentei) ----------
+  function dataURLtoBlob(dataUrl: string) {
+    const [meta, b64] = dataUrl.split(",");
+    const mimeMatch = /data:(.*?);base64/.exec(meta);
+    const mime = mimeMatch ? mimeMatch[1] : "image/png";
+    const bin = atob(b64);
+    const len = bin.length;
+    const u8 = new Uint8Array(len);
+    for (let i = 0; i < len; i++) u8[i] = bin.charCodeAt(i);
+    return new Blob([u8], { type: mime });
+  }
+
+  const handleDownloadImage = useCallback(async () => {
     if (!resultImage) return;
-    const link = document.createElement("a");
-    link.href = resultImage;
-    link.download = `ai-redesign.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+
+    if (resultImage.startsWith("data:image/")) {
+      const blob = dataURLtoBlob(resultImage);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ai-redesign.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    try {
+      const resp = await fetch(resultImage);
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ai-redesign.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      const a = document.createElement("a");
+      a.href = resultImage;
+      a.download = "ai-redesign.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+  }, [resultImage]);
+  // -------------------------------------------------------------------------
 
   const handleCopyText = async () => {
     if (!resultText) return;
-    try { await navigator.clipboard.writeText(resultText); alert("Design suggestions copied!"); }
-    catch { alert("Copy failed. Select and copy manually."); }
+    try {
+      await navigator.clipboard.writeText(resultText);
+      alert("Design suggestions copied!");
+    } catch {
+      alert("Copy failed. Select and copy manually.");
+    }
   };
 
   const handleSavePreset = (presetData: Omit<Preset, "id">) => {
@@ -248,57 +337,10 @@ const App: React.FC = () => {
                 )}
               </div>
               {resultImage && (
-                <button onClick={function dataURLtoBlob(dataUrl: string) {
-  const [meta, b64] = dataUrl.split(",");
-  const mimeMatch = /data:(.*?);base64/.exec(meta);
-  const mime = mimeMatch ? mimeMatch[1] : "image/png";
-  const bin = atob(b64);
-  const len = bin.length;
-  const u8 = new Uint8Array(len);
-  for (let i = 0; i < len; i++) u8[i] = bin.charCodeAt(i);
-  return new Blob([u8], { type: mime });
-}
-
-async function handleDownloadImage() {
-  if (!resultImage) return;
-
-  // dacă e base64
-  if (resultImage.startsWith("data:image/")) {
-    const blob = dataURLtoBlob(resultImage);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ai-redesign.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    return;
-  }
-
-  // dacă e URL normal
-  try {
-    const resp = await fetch(resultImage);
-    const blob = await resp.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ai-redesign.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  } catch {
-    const a = document.createElement("a");
-    a.href = resultImage;
-    a.download = "ai-redesign.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-}
-}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg">
+                <button
+                  onClick={handleDownloadImage}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg"
+                >
                   Download Image
                 </button>
               )}
@@ -308,8 +350,10 @@ async function handleDownloadImage() {
               <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-100">Design Suggestions</h3>
               <p className="text-zinc-600 dark:text-zinc-300 whitespace-pre-wrap">{resultText || "No suggestions yet."}</p>
               {resultText && (
-                <button onClick={handleCopyText}
-                        className="w-full bg-zinc-200 hover:bg-zinc-300 text-zinc-800 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:text-zinc-100 font-bold py-3 px-4 rounded-lg mt-2">
+                <button
+                  onClick={handleCopyText}
+                  className="w-full bg-zinc-200 hover:bg-zinc-300 text-zinc-800 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:text-zinc-100 font-bold py-3 px-4 rounded-lg mt-2"
+                >
                   Copy Text
                 </button>
               )}
@@ -317,8 +361,10 @@ async function handleDownloadImage() {
           </div>
 
           <div className="text-center mt-10">
-            <button onClick={handleReset}
-                    className="font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline">
+            <button
+              onClick={handleReset}
+              className="font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+            >
               Start a New Design
             </button>
           </div>
@@ -333,41 +379,61 @@ async function handleDownloadImage() {
           <label htmlFor="image-uploader" className="text-lg font-semibold mb-2 text-zinc-700 dark:text-zinc-300">
             1. Upload a Photo of Your Room
           </label>
-          <ImageUploader id="image-uploader" onFileSelect={file=>handleImageUpload(file)} imageUrl={previewUrl} />
+          <ImageUploader id="image-uploader" onFileSelect={(file) => handleImageUpload(file)} imageUrl={previewUrl} />
         </div>
 
         <div className="flex flex-col">
           <label htmlFor="style-select" className="text-lg font-semibold mb-2 text-zinc-700 dark:text-zinc-300">
             2. Select a Design Style
           </label>
-          <select id="style-select" value={selectedStyle} onChange={(e)=>setSelectedStyle(e.target.value)}
-                  className="w-full p-3 border-2 rounded-lg bg-white dark:bg-zinc-800 dark:text-zinc-200">
+          <select
+            id="style-select"
+            value={selectedStyle}
+            onChange={(e) => setSelectedStyle(e.target.value)}
+            className="w-full p-3 border-2 rounded-lg bg-white dark:bg-zinc-800 dark:text-zinc-200"
+          >
             <optgroup label="Standard Styles">
-              {DESIGN_STYLES.map(s => <option key={s} value={s}>{s}</option>)}
+              {DESIGN_STYLES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </optgroup>
             {presets.length > 0 && (
               <optgroup label="Custom Presets">
-                {presets.map(p => <option key={p.id} value={`preset:${p.id}`}>{p.name}</option>)}
+                {presets.map((p) => (
+                  <option key={p.id} value={`preset:${p.id}`}>
+                    {p.name}
+                  </option>
+                ))}
               </optgroup>
             )}
           </select>
-          <button onClick={()=>setIsPresetModalOpen(true)}
-                  className="text-sm text-blue-600 hover:underline mt-2 text-left">+ Create Custom Style</button>
+          <button onClick={() => setIsPresetModalOpen(true)} className="text-sm text-blue-600 hover:underline mt-2 text-left">
+            + Create Custom Style
+          </button>
         </div>
 
         <div className="flex flex-col">
           <label htmlFor="specific-changes" className="text-lg font-semibold mb-2 text-zinc-700 dark:text-zinc-300">
             3. Add Specific Changes (optional)
           </label>
-          <textarea id="specific-changes" value={specificChanges}
-                    onChange={(e)=>setSpecificChanges(e.target.value)}
-                    placeholder="Ex: Change only the sofa to gray, add plants, modify only wall colors."
-                    className="w-full p-3 border-2 rounded-lg bg-white dark:bg-zinc-800 dark:text-zinc-200" rows={3} />
+          <textarea
+            id="specific-changes"
+            value={specificChanges}
+            onChange={(e) => setSpecificChanges(e.target.value)}
+            placeholder="Ex: Change only the sofa to gray, add plants, modify only wall colors."
+            className="w-full p-3 border-2 rounded-lg bg-white dark:bg-zinc-800 dark:text-zinc-200"
+            rows={3}
+          />
           <p className="text-sm text-zinc-500 mt-2">💡 Example: change only the sofa, add more plants, modify only the wall colors.</p>
         </div>
 
-        <button onClick={handleGenerate} disabled={!roomImage || isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 px-4 rounded-lg text-lg disabled:bg-zinc-400">
+        <button
+          onClick={handleGenerate}
+          disabled={!roomImage || isLoading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 px-4 rounded-lg text-lg disabled:bg-zinc-400"
+        >
           {isLoading ? "Generating…" : "Generate Design Ideas"}
         </button>
       </div>
@@ -376,12 +442,14 @@ async function handleDownloadImage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 flex flex-col items-center p-4 md:p-8 relative">
-      <div className="absolute top-4 right-4 z-10"><ThemeToggle theme={theme} toggleTheme={toggleTheme} /></div>
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+      </div>
       <div className="flex flex-col items-center gap-10 w-full pt-10 md:pt-0">
         <Header />
         <main className="w-full">{renderContent()}</main>
       </div>
-      <PresetModal isOpen={isPresetModalOpen} onClose={()=>setIsPresetModalOpen(false)} onSave={handleSavePreset}/>
+      <PresetModal isOpen={isPresetModalOpen} onClose={() => setIsPresetModalOpen(false)} onSave={handleSavePreset} />
     </div>
   );
 };
