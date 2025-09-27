@@ -21,10 +21,11 @@ export async function generateDesignViaBackend(
   if (specificChanges) fd.append("specific_changes", specificChanges);
 
   // dacă endpoint-ul tău e /api/generate, schimbă linia de mai jos în `${API_BASE}/api/generate`
-  const res = await fetch(`${API_BASE}/generate`, {
-    method: "POST",
-    body: fd,
-  });
+ const res = await fetch(`${API_BASE}/generate`, {
+  method: "POST",
+  body: fd
+});
+
 
   if (!res.ok) {
     const text = await res.text();
