@@ -145,6 +145,11 @@ const App: React.FC = () => {
   // state
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  function showToast(msg: string, ms = 1600) {
+  setToast(msg);
+  window.setTimeout(() => setToast(null), ms);
+}
 
   // results
   const [resultImage, setResultImage] = useState<string | null>(null);
@@ -279,14 +284,15 @@ const App: React.FC = () => {
   // -------------------------------------------------------------------------
 
   const handleCopyText = async () => {
-    if (!resultText) return;
-    try {
-      await navigator.clipboard.writeText(resultText);
-      alert("Design suggestions copied!");
-    } catch {
-      alert("Copy failed. Select and copy manually.");
-    }
-  };
+  if (!resultText) return;
+  try {
+    await navigator.clipboard.writeText(resultText);
+    showToast("Design suggestions copied!");
+  } catch {
+    showToast("Copy failed. Select and copy manually.", 2200);
+  }
+};
+
 
   const handleSavePreset = (presetData: Omit<Preset, "id">) => {
     const newPreset: Preset = { id: `preset_${Date.now()}`, ...presetData };
@@ -439,6 +445,14 @@ const App: React.FC = () => {
       </div>
     );
   };
+  {toast && (
+  <div
+    className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+    role="status"
+  >
+    {toast}
+  </div>
+)}
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 flex flex-col items-center p-4 md:p-8 relative">
