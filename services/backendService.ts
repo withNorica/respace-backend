@@ -1,10 +1,11 @@
+
 // services/backendService.ts
 
-// Baza API din env (cu fallback local)
+// Baza API din env (cu fallback production)
 export const API_BASE =
   (import.meta as any).env?.VITE_API_BASE_URL ||
   (import.meta as any).env?.VITE_API_BASE ||
-  "http://127.0.0.1:8000";
+  "https://respace-backend.vercel.app";
 
 console.log("API_BASE =", API_BASE);
 
@@ -15,11 +16,15 @@ export async function generateDesignViaBackend(
   specificChanges?: string
 ) {
   const fd = new FormData();
-  fd.append("image", file);      // numele câmpurilor trebuie să fie exact acestea
+  fd.append("image", file); // numele câmpurilor trebuie să fie exact acestea
   fd.append("style", style);
   if (specificChanges) fd.append("specific_changes", specificChanges);
 
-  const res = await fetch(`${API_BASE}/generate`, { method: "POST", body: fd });
+  // dacă endpoint-ul tău e /api/generate, schimbă linia de mai jos în `${API_BASE}/api/generate`
+  const res = await fetch(`${API_BASE}/generate`, {
+    method: "POST",
+    body: fd,
+  });
 
   if (!res.ok) {
     const text = await res.text();
