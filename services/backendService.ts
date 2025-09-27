@@ -21,8 +21,7 @@ export async function generateDesignViaBackend(
   if (specificChanges) fd.append("specific_changes", specificChanges);
 
   // dacă endpoint-ul tău e /api/generate, schimbă linia de mai jos în `${API_BASE}/api/generate`
- const res = await fetch(`https://respace-backend.vercel.app/generate`, {
-
+ onst res = await fetch(`https://respace-backend.vercel.app/api/generate`, {
   method: "POST",
   body: fd
 });
