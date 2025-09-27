@@ -11,19 +11,31 @@ import google.generativeai as genai
 
 load_dotenv()
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="ReSpace Design API", version="0.1.0")
 
+# ✅ Middleware CORS unic, cu toate origin-urile permise
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",                      # dev local
-        "https://respace-backend.vercel.app",         # frontend Vercel (corect, cu https://)
-        # poți lăsa și backend-ul, nu strică:
+        # Domeniile frontend
+        "https://gorespace.com",
+        "https://www.gorespace.com",
+
+        # Pentru development local
+        "http://localhost:5173",
+
+        # Backends existente (nu strică să le lași)
+        "https://respace-backend.vercel.app",
         "https://respace-backend-nfiv.onrender.com",
     ],
-    allow_methods=["*"],
+    allow_credentials=True,  # TRUE ca să meargă totul ok cu POST
+    allow_methods=["*"],     # sau ["POST"] dacă vrei strict
     allow_headers=["*"],
-    allow_credentials=False,
+)
+
 )
 
 API_KEY = os.getenv("GEMINI_API_KEY")
